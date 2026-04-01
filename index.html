@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 40th Birthday, Dearest Chachi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- jsPDF for Realistic Ticket Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           CSS Variables & Reset (LUXURY ROSE GOLD THEME)
+           ========================================================================== */
+        :root {
+            --color-bg-dark: #1a0f14; 
+            --color-bg-purple: #2e1424; 
+            --color-accent-gold: #e8b287; 
+            --color-accent-pink: #f4dcd6; 
+            --color-text-main: #fcf8f5; 
+            --color-text-muted: #d0babc; 
+            
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Poppins', sans-serif;
+            
+            --glass-bg: rgba(255, 230, 235, 0.04); 
+            --glass-border: rgba(232, 178, 135, 0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%; height: 100%; font-family: var(--font-body);
+            background-color: var(--color-bg-dark); color: var(--color-text-main);
+            overflow-x: hidden; scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--color-bg-dark) 0%, var(--color-bg-purple) 100%);
+            background-attachment: fixed; transition: background 2s ease;
+        }
+
+        body.store-open { background: linear-gradient(135deg, #2e1424 0%, #1a0f14 100%); }
+
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
+
+        h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 500; letter-spacing: 2px; }
+        p { line-height: 1.8; font-weight: 300; color: var(--color-text-muted); }
+        .text-gold { color: var(--color-accent-gold); }
+        .text-pink { color: var(--color-accent-pink); }
+        
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+
+        .section {
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; padding: 5rem 2rem; position: relative;
+            z-index: 20; opacity: 0; transform: translateY(30px); transition: opacity 1.5s ease, transform 1.5s ease;
+        }
+        .section.visible { opacity: 1; transform: translateY(0); }
+
+        /* Buttons */
+        .btn-elegant {
+            padding: 1rem 2.5rem; background: transparent; border: 1px solid var(--color-accent-gold);
+            color: var(--color-accent-gold); font-family: var(--font-body); font-size: 0.85rem;
+            letter-spacing: 3px; text-transform: uppercase; border-radius: 50px; cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(5px);
+        }
+        .btn-elegant:hover { background: var(--color-accent-gold); color: var(--color-bg-dark); box-shadow: 0 10px 25px rgba(232, 178, 135, 0.3); transform: translateY(-2px); }
+
+        .btn-filled { background: var(--color-accent-gold); color: var(--color-bg-dark); }
+        .btn-filled:hover { background: #fce4ce; box-shadow: 0 10px 25px rgba(232, 178, 135, 0.4); }
+
+        /* Circular Buttons */
+        .btn-circular {
+            width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(5px); outline: none;
+        }
+        .btn-circular.btn-outline { background: transparent; border: 1px solid var(--color-accent-gold); color: var(--color-accent-gold); }
+        .btn-circular.btn-outline:hover { background: var(--color-accent-gold); color: var(--color-bg-dark); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(232, 178, 135, 0.3); }
+        .btn-circular.btn-filled { background: var(--color-accent-gold); border: 1px solid var(--color-accent-gold); color: var(--color-bg-dark); }
+        .btn-circular.btn-filled:hover { background: #fce4ce; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(232, 178, 135, 0.4); }
+        .btn-circular:active { transform: scale(0.85) !important; }
+
+        /* ==========================================================================
+           CINEMATIC INTRO 
+           ========================================================================== */
+        #cinematic-intro {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #080406; 
+            z-index: 10000; display: grid; place-items: center; overflow: hidden;
+        }
+        #cinematic-intro > div {
+            grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;
+        }
+
+        .blur-fade { opacity: 0; filter: blur(15px); transform: scale(0.95) translateY(10px); transition: opacity 2s ease, filter 2s ease, transform 2s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; }
+        .blur-fade.active { opacity: 1; filter: blur(0); transform: scale(1) translateY(0); pointer-events: auto; }
+        .blur-fade.exit { opacity: 0; filter: blur(15px); transform: scale(1.05) translateY(-10px); pointer-events: none; }
+
+        .cinematic-quote { font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 2.5rem); color: var(--color-accent-pink); font-style: italic; font-weight: 300; letter-spacing: 2px; text-shadow: 0 0 20px rgba(244, 220, 214, 0.2); text-align: center; margin: 0; }
+
+        .eclipse-container { pointer-events: none; z-index: 1; }
+        .eclipse-ring {
+            position: relative; width: clamp(300px, 50vw, 600px); height: clamp(300px, 50vw, 600px); border-radius: 50%;
+            box-shadow: inset 0 0 50px rgba(232, 178, 135, 0.2), 0 0 100px rgba(232, 178, 135, 0.1); border: 1px solid rgba(232, 178, 135, 0.3); animation: slowRotate 25s linear infinite;
+        }
+        .eclipse-orb {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 40px 15px rgba(232, 178, 135, 0.8), 0 0 80px 30px rgba(255, 255, 255, 0.4);
+        }
+        @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .hero-title-wrapper { z-index: 2; }
+        .gold-shimmer-text {
+            font-family: var(--font-heading); font-size: clamp(3rem, 10vw, 8rem); font-weight: 600; 
+            letter-spacing: clamp(10px, 3vw, 25px); text-indent: clamp(10px, 3vw, 25px); 
+            text-transform: uppercase; margin: 0; padding: 0; text-align: center;
+            background: linear-gradient(-45deg, #a66e4a 0%, #e8b287 20%, #fff5ed 40%, #e8b287 60%, #a66e4a 80%, #e8b287 100%);
+            background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
+            animation: shimmerText 6s linear infinite; text-shadow: 0 0 50px rgba(232, 178, 135, 0.2); line-height: 1.1;
+        }
+        @keyframes shimmerText { to { background-position: 200% center; } }
+        .hero-subtitle { font-family: var(--font-body); font-size: clamp(0.9rem, 2vw, 1.2rem); letter-spacing: 8px; text-indent: 8px; color: var(--color-accent-pink); text-transform: uppercase; margin-top: 1rem; font-weight: 300; text-align: center; }
+
+        #enter-magic-btn {
+            margin-top: 3rem; padding: 1.2rem 3rem; background: rgba(232, 178, 135, 0.1); border: 1px solid var(--color-accent-gold); color: var(--color-accent-gold);
+            font-family: var(--font-body); letter-spacing: 4px; text-transform: uppercase; border-radius: 50px; cursor: pointer; transition: all 0.5s ease; backdrop-filter: blur(10px);
+        }
+        #enter-magic-btn:hover { background: var(--color-accent-gold); color: var(--color-bg-dark); box-shadow: 0 0 40px rgba(232, 178, 135, 0.5); transform: scale(1.05); }
+
+        #epic-flash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 100000; opacity: 0; pointer-events: none; transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* ==========================================================================
+           MAIN CONTENT
+           ========================================================================== */
+        #main-content { display: none; }
+
+        .reveal-heading { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1.5rem; line-height: 1.3; }
+        .reveal-heading span { display: block; font-size: clamp(3.5rem, 9vw, 6.5rem); color: var(--color-accent-gold); font-style: italic; text-shadow: 0 10px 40px rgba(232, 178, 135, 0.2); margin-top: 0.5rem; font-weight: 400; }
+        .reveal-text { font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
+
+        /* Memory Gallery */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; padding: 1rem; margin-top: 3rem; }
+        .gallery-item {
+            position: relative; aspect-ratio: 3/4; cursor: pointer; border-radius: 150px 150px 16px 16px; overflow: hidden;
+            background: linear-gradient(135deg, #2e1424, #1a0f14); border: 1px solid var(--glass-border); box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s ease;
+        }
+        .gallery-item:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(232, 178, 135, 0.15); }
+        .gallery-quote { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 2rem; text-align: center; z-index: 2; transition: opacity 0.8s ease, transform 0.8s ease; }
+        .handwritten-note { font-family: var(--font-heading); font-size: clamp(1.3rem, 2.5vw, 1.5rem); color: var(--color-accent-pink); font-style: italic; line-height: 1.7; }
+        .reveal-hint { display: block; margin-top: 2rem; font-size: 0.75rem; color: var(--color-accent-gold); text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; animation: pulseHint 2.5s infinite; }
+        .gallery-photo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transform: scale(1.1); z-index: 1; transition: opacity 0.8s ease, transform 0.8s ease; pointer-events: none; border-radius: 150px 150px 16px 16px; overflow: hidden; }
+        .gallery-photo img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.95) contrast(1.05); object-position: center 20%; }
+        .gallery-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 3rem 1.5rem 1.5rem; background: linear-gradient(to top, rgba(26, 15, 20, 0.95), transparent); color: white; text-align: center; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+        .gallery-item.is-open:hover .gallery-overlay { opacity: 1; transform: translateY(0); }
+        .gallery-overlay h3 { font-size: 1.5rem; color: var(--color-accent-gold); }
+        .gallery-item.is-open .gallery-quote { opacity: 0; transform: scale(0.95); pointer-events: none; }
+        .gallery-item.is-open .gallery-photo { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+        /* Cinematic Timeline */
+        .timeline { position: relative; max-width: 800px; margin: 5rem auto 3rem; padding: 2rem 0; }
+        .timeline-steps { position: relative; padding-bottom: 2rem; }
+        .timeline-steps::before {
+            content: ''; position: absolute; top: 0; height: 0; width: 2px; background: linear-gradient(to bottom, transparent, var(--color-accent-gold) 15%, var(--color-accent-gold) 85%, transparent); box-shadow: 0 0 15px var(--color-accent-gold); transition: height 4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; left: 50%; margin-left: -1px; 
+        }
+        .timeline.visible .timeline-steps::before { height: 100%; }
+        .timeline-item { position: relative; margin-bottom: 4rem; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; z-index: 2; }
+        .timeline-steps .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .timeline-dot { position: absolute; top: 5px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-accent-gold); box-shadow: 0 0 0 4px var(--color-bg-dark), 0 0 0 5px var(--color-accent-gold), 0 0 20px var(--color-accent-gold); animation: pulseRing 3s infinite; z-index: 3; }
+        .timeline-content { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 2rem; border-radius: 12px; backdrop-filter: blur(12px); text-align: left; transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease; }
+        .timeline-content:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(232, 178, 135, 0.08); border-color: rgba(232, 178, 135, 0.4); }
+        .timeline-date { color: var(--color-accent-pink); font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.5rem; letter-spacing: 1px; }
+        
+        .timeline-item.final-node { margin-top: 0; padding-left: 0; text-align: center; }
+        .timeline-item.final-node .timeline-dot { left: 50%; margin-left: -7px; transform: none; top: -2rem; }
+        .timeline-item.final-node .timeline-content { background: #231018; border-color: var(--color-accent-gold); text-align: center; padding: 3.5rem 2.5rem; box-shadow: 0 20px 40px rgba(232, 178, 135, 0.1); position: relative; z-index: 5; margin: 0 auto; max-width: 85%; border-radius: 16px; }
+        .timeline-item.final-node .timeline-date { font-size: 2rem; color: var(--color-accent-gold); margin-bottom: 1rem; }
+
+        @media (min-width: 768px) {
+            .timeline-item, .timeline-steps .timeline-item { width: 50%; padding-left: 0; padding-right: 50px; margin-left: 0; text-align: right; }
+            .timeline-steps .timeline-item:nth-child(even) { margin-left: 50%; padding-left: 50px; padding-right: 0; text-align: left; }
+            .timeline-item .timeline-dot { left: auto; right: -7px; margin-left: 0; }
+            .timeline-steps .timeline-item:nth-child(even) .timeline-dot { left: -7px; right: auto; margin-left: 0; }
+            .timeline-item .timeline-content { text-align: right; }
+            .timeline-steps .timeline-item:nth-child(even) .timeline-content { text-align: left; }
+            .timeline-item.final-node { width: 100%; margin-left: 0; }
+            .timeline-item.final-node .timeline-dot { left: 50%; margin-left: -7px; transform: none; top: -2rem; }
+        }
+
+        @media (max-width: 767px) {
+            .timeline-steps::before { left: 24px; margin-left: 0; transform: none; }
+            .timeline-steps .timeline-item { width: 100%; padding-left: 60px; text-align: left; }
+            .timeline-steps .timeline-item .timeline-dot { left: 18px; right: auto; margin-left: 0; }
+            .timeline-item.final-node { padding-left: 0; }
+            .timeline-item.final-node .timeline-content { max-width: 100%; padding: 2.5rem 1.5rem; }
+            .timeline-item.final-node .timeline-dot { left: 18px; margin-left: 0; transform: none; top: -2rem; }
+        }
+
+        /* Cake Section */
+        .cake-container { margin: 3rem auto; cursor: pointer; position: relative; display: inline-block; transition: transform 0.4s ease; }
+        .cake-container:hover { transform: scale(1.02); }
+        .cake-svg { width: 100%; max-width: 350px; height: auto; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); }
+        .candle-flame { fill: #FFD166; opacity: 0; transition: opacity 1s ease, filter 1s ease; transform-origin: center bottom; }
+        .cake-container.lit .candle-flame { opacity: 1; filter: drop-shadow(0 0 10px #FFD166) drop-shadow(0 0 25px #FF9A00); animation: flicker 3s infinite alternate ease-in-out; }
+        .click-hint { margin-top: 2rem; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; color: var(--color-accent-gold); animation: pulseHint 2.5s infinite; transition: opacity 0.5s ease; }
+        
+        #unlock-store-btn { margin-top: 3rem; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 1s ease; }
+        #unlock-store-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        /* Store */
+        #hidden-store-section { display: none; padding-top: 8rem; }
+        .store-header { margin-bottom: 5rem; position: relative; }
+        .store-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 320px)); justify-content: center; gap: 3rem; max-width: 1200px; width: 100%; padding: 0 1rem; margin: 0 auto; }
+        .store-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease; display: flex; flex-direction: column; opacity: 0; transform: translateY(40px); height: 100%; }
+        #hidden-store-section.visible .store-card { animation: slideUpFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .store-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(232, 178, 135, 0.12); border-color: rgba(232, 178, 135, 0.6); }
+        .store-card-img { width: 100%; height: 220px; border-radius: 6px; object-fit: cover; margin-bottom: 1.5rem; transition: transform 0.8s ease, filter 0.8s ease; filter: brightness(0.9); }
+        .store-card:hover .store-card-img { transform: scale(1.03); filter: brightness(1.05); }
+        .store-card h3 { color: var(--color-accent-gold); margin-bottom: 0.8rem; font-size: 1.5rem; }
+        .store-card p { font-size: 0.95rem; margin-bottom: 1.5rem; flex-grow: 1; }
+        .store-card-actions { display: flex; gap: 1rem; justify-content: center; align-items: center;}
+
+        /* Floating Actions */
+        .floating-action-btn {
+            position: fixed; bottom: 30px; background: var(--color-bg-dark); color: var(--color-accent-gold);
+            border: 1px solid var(--color-accent-gold); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 25px rgba(232, 178, 135, 0.15); cursor: pointer; z-index: 100; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: none;
+        }
+        .floating-action-btn:hover { transform: scale(1.15); background: var(--color-accent-gold); color: var(--color-bg-dark); }
+        #cart-icon { right: 30px; }
+        #music-icon { left: 30px; } 
+        #cart-count { position: absolute; top: -5px; right: -5px; background: var(--color-accent-pink); color: var(--color-bg-dark); font-size: 0.9rem; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+
+        /* ==========================================================================
+           MUSIC PLAYER & TOGGLE STYLES
+           ========================================================================== */
+        .music-tabs-container {
+            display: flex; position: relative; background: rgba(0,0,0,0.4);
+            border-radius: 30px; margin: 1.5rem auto; width: 80%; max-width: 300px;
+            padding: 5px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .music-tab-bg {
+            position: absolute; top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px);
+            background: var(--color-accent-gold); border-radius: 25px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1; box-shadow: 0 4px 10px rgba(232, 178, 135, 0.3);
+        }
+        .music-tab-btn {
+            flex: 1; background: transparent; border: none; color: var(--color-text-muted);
+            font-family: var(--font-body); font-size: 0.9rem; padding: 0.6rem 0;
+            cursor: pointer; z-index: 2; transition: color 0.4s ease; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .music-tab-btn.active { color: var(--color-bg-dark); font-weight: 600; }
+        
+        .tab-content-area { position: relative; min-height: 280px; }
+        .music-tab-content { display: none; opacity: 0; transition: opacity 0.4s ease; }
+        .music-tab-content.active { display: block; opacity: 1; animation: slideUpFade 0.5s ease forwards; }
+
+        .now-playing-header {
+            display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 1rem;
+            padding: 1rem; background: linear-gradient(90deg, transparent, rgba(232, 178, 135, 0.05), transparent); border-radius: 12px;
+        }
+        .equalizer { display: flex; gap: 3px; align-items: flex-end; height: 15px; opacity: 0; transition: opacity 0.3s; }
+        .equalizer.playing { opacity: 1; }
+        .eq-bar { width: 3px; background: var(--color-accent-gold); border-radius: 3px; animation: eqBounce 1s infinite ease-in-out alternate; }
+        .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+        .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes eqBounce { 0% { height: 3px; } 100% { height: 15px; } }
+
+        .playlist-wrapper { display: flex; flex-direction: column; gap: 0.8rem; }
+        .track-item {
+            display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 0.8rem 1rem; transition: all 0.3s ease;
+        }
+        .track-item:hover { border-color: rgba(232, 178, 135, 0.5); background: rgba(232, 178, 135, 0.05); }
+        .track-item.active { border-color: var(--color-accent-gold); background: rgba(232, 178, 135, 0.1); }
+        
+        .track-details { display: flex; flex-direction: column; align-items: flex-start; cursor: pointer; flex-grow: 1; text-align: left; }
+        .track-name { color: var(--color-text-main); font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 0.2rem; transition: color 0.3s ease; }
+        .track-item.active .track-name { color: var(--color-accent-gold); }
+        .track-sub { color: var(--color-text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .track-actions { display: flex; gap: 0.6rem; align-items: center; }
+        .icon-btn {
+            background: transparent; border: 1px solid rgba(232, 178, 135, 0.4); color: var(--color-accent-gold); width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s; flex-shrink: 0;
+        }
+        .icon-btn:hover { background: var(--color-accent-gold); color: var(--color-bg-dark); transform: scale(1.1); }
+        .icon-btn.playing { background: var(--color-accent-gold); color: var(--color-bg-dark); }
+        
+        .lyrics-section {
+            background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1.5rem; max-height: 280px; overflow-y: auto; text-align: center; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .lyrics-section::-webkit-scrollbar { width: 4px; }
+        .lyrics-section::-webkit-scrollbar-track { background: transparent; }
+        .lyrics-section::-webkit-scrollbar-thumb { background: rgba(232, 178, 135, 0.5); border-radius: 10px; }
+        .lyrics-text { font-family: var(--font-body); font-size: 0.9rem; line-height: 1.8; color: var(--color-accent-pink); }
+        .lyrics-text span.verse-title { color: var(--color-accent-gold); font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; display: block; margin-top: 1rem; margin-bottom: 0.3rem;}
+
+        /* ==========================================================================
+           MODALS (GENERAL)
+           ========================================================================== */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(20, 10, 15, 0.9); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.5s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: #231018; border: 1px solid rgba(232, 178, 135, 0.3); border-radius: 16px; padding: 3rem; width: 90%; max-width: 500px; text-align: center; position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 30px 60px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; overscroll-behavior: contain; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .modal-content::-webkit-scrollbar { width: 4px; }
+        .modal-content::-webkit-scrollbar-track { background: transparent; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(232, 178, 135, 0.5); border-radius: 10px; }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: var(--color-text-muted); font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-close:hover { background: var(--color-accent-gold); color: var(--color-bg-dark); border-color: var(--color-accent-gold); transform: rotate(90deg); }
+
+        .booking-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 2rem; text-align: left; margin-top: 1rem; }
+        .flight-route-visual { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; position: relative; }
+        .route-city { font-family: var(--font-heading); font-size: 2rem; color: var(--color-accent-gold); font-weight: 500; z-index: 2; }
+        .route-line { flex: 1; height: 1px; background: repeating-linear-gradient(to right, var(--color-accent-gold) 0, var(--color-accent-gold) 4px, transparent 4px, transparent 8px); margin: 0 15px; position: relative; opacity: 0.4; }
+        .route-plane { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; color: var(--color-accent-pink); background: #231018; padding: 0 8px; z-index: 2; animation: floatPlane 3s ease-in-out infinite; }
+
+        .booking-form-group { margin-bottom: 1.5rem; }
+        .booking-form-group label { display: block; font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        .booking-input { width: 100%; padding: 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 6px; font-family: var(--font-body); outline: none; transition: all 0.3s ease; }
+        .booking-input:focus { border-color: var(--color-accent-gold); background: rgba(0,0,0,0.4); }
+        .booking-input[readonly] { color: var(--color-accent-pink); background: rgba(0,0,0,0.3); border-color: transparent; }
+        .enhanced-date-input { color: var(--color-accent-gold); font-size: 1.1rem; letter-spacing: 1px; cursor: pointer; text-align: center; }
+        ::-webkit-calendar-picker-indicator { filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(350deg); cursor: pointer; opacity: 0.8; transition: opacity 0.3s; }
+        ::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+
+        .seat-selector { display: flex; gap: 10px; margin-top: 0.5rem; }
+        .seat-selector input[type="radio"] { display: none; }
+        .seat-label { flex: 1; padding: 0.8rem 0; text-align: center; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--color-text-muted); font-family: var(--font-body); font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; }
+        .seat-label:hover { border-color: rgba(232, 178, 135, 0.4); }
+        .seat-selector input[type="radio"]:checked + .seat-label { background: rgba(232, 178, 135, 0.1); border-color: var(--color-accent-gold); color: var(--color-accent-gold); font-weight: 500; }
+
+        .checkbox-container { display: flex; align-items: flex-start; gap: 12px; margin-top: 1rem; }
+        .checkbox-container input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--color-accent-gold); cursor: pointer; }
+        .checkbox-container label { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.5; cursor: pointer; display: inline; margin-bottom: 0; }
+
+        .password-input { width: 100%; padding: 1.2rem; margin: 2rem 0; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 8px; color: white; font-family: var(--font-body); font-size: 1rem; text-align: center; outline: none; transition: border-color 0.3s; }
+        .password-input:focus { border-color: var(--color-accent-gold); }
+        .error-msg { color: var(--color-accent-pink); font-size: 0.9rem; margin-top: -1rem; margin-bottom: 1.5rem; display: none; }
+
+        .recipe-content { text-align: left; margin-top: 1.5rem; }
+        .recipe-content h4 { color: var(--color-accent-gold); margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .recipe-content ul, .recipe-content ol { padding-left: 1.5rem; color: var(--color-text-muted); font-size: 0.95rem; font-weight: 300; line-height: 1.8;}
+        
+        .cart-list { max-height: 300px; overflow-y: auto; margin: 2rem 0; text-align: left; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .cart-item-remove { color: var(--color-accent-pink); cursor: pointer; font-size: 0.8rem; background: none; border: none; letter-spacing: 1px; text-transform: uppercase;}
+        .empty-cart-msg { text-align: center; color: var(--color-text-muted); margin: 3rem 0; font-style: italic; }
+
+        /* Animations */
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseHint { 0% { opacity: 0.4; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.4; transform: scale(0.98); } }
+        @keyframes pulseRing { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
+        @keyframes flicker { 0% { transform: scale(1) rotate(-1deg); opacity: 0.9; } 50% { transform: scale(1.05) rotate(1deg); opacity: 1; } 100% { transform: scale(0.95) rotate(0deg); opacity: 0.8; } }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); } }
+        .error-shake { animation: shake 0.3s ease; }
+        @keyframes floatPlane { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, -80%); text-shadow: 0 10px 10px rgba(232, 178, 135, 0.4); } }
+        .click-ripple { animation: popRipple 0.5s ease-out; }
+        @keyframes popRipple { 0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(232, 178, 135, 0.7); } 50% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(232, 178, 135, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 178, 135, 0); } }
+
+        .stagger-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .modal-overlay.active .stagger-up { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; } .delay-4 { transition-delay: 0.4s; } .delay-5 { transition-delay: 0.5s; } .delay-6 { transition-delay: 0.6s; }
+
+        @media (max-width: 480px) {
+            .store-grid, .gallery-grid { grid-template-columns: 1fr; }
+            .modal-content { padding: 2rem 1.2rem; }
+            h2 { font-size: 2rem; } .reveal-heading span { font-size: 3rem; }
+            .recipe-content { font-size: 0.9rem; } .btn-elegant { padding: 0.8rem 1.5rem; font-size: 0.8rem; }
+            .seat-label { font-size: 0.8rem; padding: 0.6rem 0; } .booking-card { padding: 1.5rem; }
+            .gallery-item, .gallery-photo { border-radius: 120px 120px 12px 12px; }
+            .floating-action-btn { width: 55px; height: 55px; }
+            #cart-icon { right: 20px; bottom: 20px; }
+            #music-icon { left: 20px; bottom: 20px; }
+            .track-actions .icon-btn { width: 35px; height: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Stars Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Global Audio Element (Controlled by Player & Cake) -->
+    <audio id="birthday-audio" preload="auto"></audio>
+
+    <!-- =======================================================================
+         UNLIMITED BUDGET CINEMATIC INTRO
+         ======================================================================= -->
+    <div id="cinematic-intro">
+        <div class="blur-fade" id="cine-quote-1">
+            <h2 class="cinematic-quote">Some bonds...</h2>
+        </div>
+        <div class="blur-fade" id="cine-quote-2">
+            <h2 class="cinematic-quote">...are written in the stars.</h2>
+        </div>
+
+        <div class="eclipse-container blur-fade" id="cine-eclipse">
+            <div class="eclipse-ring">
+                <div class="eclipse-orb"></div>
+            </div>
+        </div>
+
+        <div class="hero-title-wrapper blur-fade" id="cine-title">
+            <h1 class="gold-shimmer-text">CHACHI</h1>
+            <p class="hero-subtitle">Celebrating 40 Years of Grace</p>
+            <button id="enter-magic-btn" class="blur-fade">Step Into The Magic</button>
+        </div>
+    </div>
+
+    <!-- The Epic Flashbang Transition Layer -->
+    <div id="epic-flash"></div>
+
+    <!-- =======================================================================
+         MAIN CONTENT Container
+         ======================================================================= -->
+    <div id="main-content">
+        
+        <section class="section scroll-reveal" id="reveal-section">
+            <div class="container">
+                <h1 class="reveal-heading">
+                    Happy 40th Birthday 
+                    <span>Dearest Chachi</span>
+                </h1>
+                <p class="reveal-text">
+                    You are one of the most caring and loving people in our family. <br><br>
+                    Even though distance separates us today, our love and gratitude travel across every mile to celebrate the beautiful person you are.
+                </p>
+            </div>
+        </section>
+
+        <section class="section scroll-reveal">
+            <div class="container">
+                <h2>Treasured <span class="text-gold">Memories</span></h2>
+                <p style="margin-top: 1rem;">Tap the quotes to reveal the beautiful moments beneath.</p>
+                <div class="gallery-container">
+                    <div class="gallery-grid">
+                        
+                        <div class="gallery-item" onclick="this.classList.toggle('is-open')">
+                            <div class="gallery-quote">
+                                <p class="handwritten-note">"The most beautiful smile that makes any distance feel small. We love and miss you so much!"</p>
+                                <span class="reveal-hint">Tap to reveal photo</span>
+                            </div>
+                            <div class="gallery-photo">
+                                <img src="image_ef7925.jpg" alt="Radiant Smile">
+                                <div class="gallery-overlay">
+                                    <h3>Radiant Smile</h3>
+                                    <span style="font-size: 0.75rem; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase;">Tap to hide</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-item" style="transform: translateY(20px);" onclick="this.classList.toggle('is-open')">
+                            <div class="gallery-quote">
+                                <p class="handwritten-note">"You carry grace in everything you do. Your inner beauty shines just as brightly as your stunning presence."</p>
+                                <span class="reveal-hint">Tap to reveal photo</span>
+                            </div>
+                            <div class="gallery-photo">
+                                <img src="1000134671.png" alt="Elegance">
+                                <div class="gallery-overlay">
+                                    <h3>Elegance & Grace</h3>
+                                    <span style="font-size: 0.75rem; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase;">Tap to hide</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-item" onclick="this.classList.toggle('is-open')">
+                            <div class="gallery-quote">
+                                <p class="handwritten-note">"40 years of pure elegance and a heart of gold. May your light continue to inspire us every single day."</p>
+                                <span class="reveal-hint">Tap to reveal photo</span>
+                            </div>
+                            <div class="gallery-photo">
+                                <img src="1000134672.png" alt="Timeless Beauty">
+                                <div class="gallery-overlay">
+                                    <h3>Timeless Beauty</h3>
+                                    <span style="font-size: 0.75rem; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase;">Tap to hide</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section scroll-reveal timeline-section">
+            <div class="container">
+                <h2>The Beautiful <span class="text-gold">Journey</span></h2>
+                <p style="margin-top: 0.5rem; margin-bottom: 2rem;">A look back at the beautiful chapters of your life.</p>
+                
+                <div class="timeline scroll-reveal">
+                    <div class="timeline-steps">
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">1986</div>
+                                <p>Born like a beautiful rose.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">2004</div>
+                                <p>Met your hubby.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">Oct 2010</div>
+                                <p>You finally said YES!</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">2010</div>
+                                <p>Completed your MCA.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">2014</div>
+                                <p>A beautiful Marriage.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">2016</div>
+                                <p>A rose bloomed again. (Rayyan)</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">2023</div>
+                                <p>Came to India.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item scroll-reveal">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">2024</div>
+                                <p>We built our beautiful bond.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item final-node scroll-reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">Today & Always</div>
+                            <p style="font-size: 1.1rem; color: var(--color-text-main); font-weight: 500;">
+                                YOU ARE AWESOME AND ALWAYS CARING AND SUPPORTIVE ❤️
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Redesigned Rose Gold & Chocolate Cake -->
+        <section class="section scroll-reveal" id="cake-section">
+            <div class="container">
+                <h2>Forty & <span class="text-gold">Fabulous</span></h2>
+                <p style="font-size: 0.85rem; color: var(--color-text-muted); font-style: italic; margin-top: 0.2rem; opacity: 0.8;">*(Legal Disclaimer: You are actually 25 with 15 years of expert-level experience)*</p>
+                <p style="margin-top:1.5rem">Tap your birthday cake for a special celebration</p>
+                
+                <div class="cake-container" id="cake-container">
+                    <svg class="cake-svg" viewBox="0 0 300 350" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="layerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#3d211a" />
+                                <stop offset="50%" stop-color="#59342b" />
+                                <stop offset="100%" stop-color="#3d211a" />
+                            </linearGradient>
+                            <linearGradient id="icingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#e8b287" />
+                                <stop offset="100%" stop-color="#c48c64" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <ellipse cx="150" cy="320" rx="140" ry="22" fill="#e8b287" fill-opacity="0.1" stroke="#e8b287" stroke-width="1"/>
+                        <ellipse cx="150" cy="320" rx="120" ry="18" fill="#140d14" stroke="#e8b287" stroke-width="2"/>
+                        
+                        <path d="M 40 320 L 40 240 Q 150 260 260 240 L 260 320 Q 150 340 40 320 Z" fill="url(#layerGrad)"/>
+                        <path d="M 38 240 Q 60 265 95 240 Q 130 265 150 240 Q 170 265 205 240 Q 240 265 262 240 Q 150 255 38 240 Z" fill="url(#icingGrad)"/>
+                        
+                        <path d="M 70 240 L 70 170 Q 150 185 230 170 L 230 240 Q 150 255 70 240 Z" fill="url(#layerGrad)"/>
+                        <path d="M 68 170 Q 90 195 110 170 Q 150 195 190 170 Q 210 195 232 170 Q 150 180 68 170 Z" fill="url(#icingGrad)"/>
+
+                        <path d="M 100 170 L 100 110 Q 150 120 200 110 L 200 170 Q 150 180 100 170 Z" fill="url(#layerGrad)"/>
+                        <path d="M 98 110 Q 120 130 150 110 Q 180 130 202 110 Q 150 118 98 110 Z" fill="url(#icingGrad)"/>
+
+                        <g stroke="#f4dcd6" stroke-width="3" stroke-linecap="round">
+                            <line x1="60" y1="240" x2="60" y2="210" /><line x1="240" y1="240" x2="240" y2="210" />
+                            <line x1="85" y1="170" x2="85" y2="140" /><line x1="215" y1="170" x2="215" y2="140" />
+                        </g>
+
+                        <g transform="translate(22, 20)">
+                            <path d="M 110 60 L 110 10 L 80 40 L 125 40 M 160 60 Q 175 60 175 35 Q 175 10 160 10 Q 145 10 145 35 Q 145 60 160 60 Z" fill="none" stroke="#e8b287" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+
+                        <g class="candle-flame">
+                            <path d="M 132 25 Q 136 15 132 5 Q 128 15 132 25 Z" /> 
+                            <path d="M 182 25 Q 186 15 182 5 Q 178 15 182 25 Z" /> 
+                            <path d="M 60 205 Q 63 195 60 185 Q 57 195 60 205 Z" />
+                            <path d="M 240 205 Q 243 195 240 185 Q 237 195 240 205 Z" />
+                            <path d="M 85 135 Q 88 125 85 115 Q 82 125 85 135 Z" />
+                            <path d="M 215 135 Q 218 125 215 115 Q 212 125 215 135 Z" />
+                        </g>
+                    </svg>
+                </div>
+                
+                <p class="click-hint" id="cake-hint">Tap to light & play music</p>
+                
+                <button class="btn-elegant" id="unlock-store-btn">Unlock Surprise Store</button>
+            </div>
+        </section>
+
+        <section class="section" id="hidden-store-section">
+            <div class="container">
+                <div class="store-header">
+                    <h2>Chachi's Sweet <span class="text-gold">Surprise Shop</span></h2>
+                    <p>A collection of premium sweet treats to celebrate your beautiful soul.</p>
+                </div>
+                <div class="store-grid" id="store-items-container"></div>
+            </div>
+        </section>
+
+        <section class="section scroll-reveal" style="margin-top: 5rem;">
+            <div class="container" style="max-width: 800px; position: relative;">
+                <span style="font-size: 5rem; color: rgba(232, 178, 135, 0.15); font-family: var(--font-heading); position: absolute; top: -3rem; left: -2rem;">"</span>
+                <p style="font-size: clamp(1.4rem, 3.5vw, 2rem); font-family: var(--font-heading); font-style: italic; color: var(--color-accent-gold); margin-bottom: 2rem; line-height: 1.6;">
+                    May Allah bless you with endless happiness, perfect health, and beautiful moments. <br>
+                    Thank you for being such a beautiful and irreplaceable part of our family.
+                </p>
+                <p style="font-size: 1.2rem; margin-bottom: 4rem; letter-spacing: 1px;">With all our love,<br><span class="text-pink" style="font-weight: 500;">Your Bhatija from India</span></p>
+
+                <button class="btn-elegant" id="one-more-surprise-btn">Wait, there's one more surprise...</button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Floating Actions (Music & Cart) -->
+    <div id="music-icon" class="floating-action-btn" onclick="openModal('music-modal')" title="Open Music Player">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+    </div>
+
+    <div id="cart-icon" class="floating-action-btn" onclick="openModal('cart-modal')" title="Open Cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        <span id="cart-count">0</span>
+    </div>
+
+    <!-- =======================================================================
+         MODALS
+         ======================================================================= -->
+    
+    <!-- Modern Music Player Modal with Tabs -->
+    <div class="modal-overlay" id="music-modal">
+        <div class="modal-content" style="max-width: 550px; padding: 2.5rem 1.5rem;">
+            <button class="modal-close" onclick="closeModal('music-modal')">×</button>
+            <h3 class="text-gold" style="margin-bottom: 0.5rem; font-size: 1.8rem;">Birthday Playlist</h3>
+            
+            <div class="now-playing-header">
+                <div class="equalizer" id="audio-eq">
+                    <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+                </div>
+                <div style="text-align: left;">
+                    <div id="np-title" style="font-family: var(--font-heading); font-size: 1.1rem; color: var(--color-accent-gold);">Select a Track</div>
+                    <div id="np-sub" style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted); letter-spacing: 1px;">Ready to play</div>
+                </div>
+            </div>
+
+            <div class="music-tabs-container">
+                <div class="music-tab-bg" id="music-tab-slider"></div>
+                <button class="music-tab-btn active" id="btn-tab-songs" onclick="switchMusicTab('songs')">Songs</button>
+                <button class="music-tab-btn" id="btn-tab-lyrics" onclick="switchMusicTab('lyrics')">Lyrics</button>
+            </div>
+            
+            <div class="tab-content-area">
+                <!-- Tab 1: Songs -->
+                <div class="music-tab-content active" id="tab-songs">
+                    <div class="playlist-wrapper" id="playlist-container">
+                        <!-- Tracks rendered dynamically here -->
+                    </div>
+                </div>
+
+                <!-- Tab 2: Lyrics -->
+                <div class="music-tab-content" id="tab-lyrics">
+                    <div class="lyrics-section" id="lyrics-section">
+                        <div class="lyrics-text" id="lyrics-text">Select a track to view lyrics.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Track Password Modal -->
+    <div class="modal-overlay" id="download-password-modal">
+        <div class="modal-content" style="max-width: 400px; padding: 2rem;">
+            <button class="modal-close" onclick="closeModal('download-password-modal')">×</button>
+            <h3 class="text-gold">Download Track</h3>
+            <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--color-text-muted); line-height: 1.6;">
+                Please enter the secret password to securely download this special song.
+            </p>
+            <input type="password" id="download-password" class="password-input" placeholder="Password...">
+            <p class="error-msg" id="download-password-error">
+                Incorrect password. <br><br>
+                <b style="color: var(--color-accent-gold);">Hint:</b> The most beautiful red flower, which also happens to be YOU! 😉🌹
+            </p>
+            <button class="btn-elegant btn-filled" style="width:100%" onclick="verifyDownloadPassword()">Download Now</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="password-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('password-modal')">×</button>
+            <h3 class="text-gold">Secret Access</h3>
+            <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--color-text-muted);">Please enter the magic words to enter Chachi's Sweet Surprise Shop.</p>
+            <input type="password" id="store-password" class="password-input" placeholder="Enter password...">
+            <p class="error-msg" id="password-error">Incorrect password. Hint: Who is this for?</p>
+            <button class="btn-elegant btn-filled" style="width:100%" onclick="checkPassword()">Enter Store</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="recipe-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('recipe-modal')">×</button>
+            <h3 id="recipe-title" class="text-gold">Recipe Title</h3>
+            <div class="recipe-content" id="recipe-details"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="cart-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('cart-modal')">×</button>
+            <h3 class="text-gold">Your Sweet Cart</h3>
+            <div class="cart-list" id="cart-items-list">
+                <p class="empty-cart-msg">Your cart is empty.</p>
+            </div>
+            <button class="btn-elegant btn-filled" id="checkout-btn" onclick="processCheckout()" style="display:none; width: 100%;">Confirm Order</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="fake-error-modal">
+        <div class="modal-content" style="border-color: #ef4444; box-shadow: 0 20px 50px rgba(239, 68, 68, 0.15);">
+            <h3 style="color: #ef4444; font-size: 1.8rem; margin-bottom: 1rem;">⚠️ Payment Failed!</h3>
+            <p style="font-size: 1.1rem; line-height: 1.6; color: var(--color-text-main);">
+                <strong>Reason:</strong> Customer is too awesome.<br><br>
+                <span style="color: var(--color-accent-gold); font-style: italic;">Applying 100% Family Discount...</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('success-modal')">×</button>
+            <h3 class="text-gold" style="font-size: 2rem; margin-bottom: 1rem;">Order Sent With Love ❤️</h3>
+            <p style="color: var(--color-text-muted);">Your beautiful order request has been sent securely to the birthday chef.<br><br>Expect something sweet soon!</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="flight-modal">
+        <div class="modal-content" style="max-width: 500px; padding: 2.5rem 2rem;">
+            <button class="modal-close" onclick="closeModal('flight-modal')">×</button>
+            <h3 class="text-gold stagger-up delay-1" style="margin-bottom: 1.5rem; font-size: 1.8rem;">Exclusive Flight Booking</h3>
+            
+            <div class="booking-card stagger-up delay-2">
+                <div class="flight-route-visual">
+                    <div class="route-city">KSA</div>
+                    <div class="route-line">
+                        <span class="route-plane">✈️</span>
+                    </div>
+                    <div class="route-city">IND</div>
+                </div>
+                
+                <div class="booking-form-group stagger-up delay-3">
+                    <label>Travel Date</label>
+                    <input type="date" id="flight-date" class="booking-input enhanced-date-input" required>
+                </div>
+                
+                <div class="booking-form-group stagger-up delay-4">
+                    <label>Seat Preference</label>
+                    <div class="seat-selector">
+                        <input type="radio" id="seat-window" name="seat-type" value="Window" checked>
+                        <label for="seat-window" class="seat-label">Window</label>
+
+                        <input type="radio" id="seat-aisle" name="seat-type" value="Aisle">
+                        <label for="seat-aisle" class="seat-label">Aisle</label>
+
+                        <input type="radio" id="seat-middle" name="seat-type" value="Middle">
+                        <label for="seat-middle" class="seat-label">Middle</label>
+                    </div>
+                </div>
+                
+                <div class="booking-form-group stagger-up delay-5">
+                    <label>Passport Number (Verified)</label>
+                    <input type="text" class="booking-input" value="Y2958157" readonly style="text-align: center; letter-spacing: 3px; color: var(--color-accent-pink); font-weight: 500; font-size: 1.1rem;">
+                </div>
+            </div>
+
+            <div class="checkbox-container stagger-up delay-6" style="background: rgba(232, 178, 135, 0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(232, 178, 135, 0.2);">
+                <input type="checkbox" id="flight-terms">
+                <label for="flight-terms">I solemnly swear to bring back at least 5kg of Love and more love (without ignoring you) for my bhatijas.</label>
+            </div>
+            <p id="flight-terms-error" class="error-msg" style="margin-top: 0.8rem; display: none;">Ah ah ah! You must agree to the terms first! 😂</p>
+            
+            <button class="btn-elegant btn-filled stagger-up delay-6" id="book-flight-btn" style="width: 100%; margin-top: 1.5rem;" onclick="confirmFlight()">Confirm & Generate Ticket</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="flight-success-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('flight-success-modal')">×</button>
+            <h3 class="text-gold" style="font-size: 2rem; margin-bottom: 1rem;">Journey Confirmed ✈️</h3>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--color-text-main);">
+                Your journey is booked…<br>
+                Not just across countries, but across hearts.<br><br>
+                <span class="text-gold" style="font-style: italic;">This is a special gift from your dearest bhatijas ❤️</span>
+            </p>
+            <button class="btn-elegant btn-filled" style="margin-top: 2rem; width: 100%;" onclick="downloadTicket()">Download Ticket</button>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "Luxury Patchi Box", desc: "The ultimate premium chocolate experience, famous across Saudi Arabia.", img: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=500&q=80", 
+              recipe: { ingredients: ["Patchi Signature Chocolates", "Hazelnut Praline", "Love"], steps: ["Open the beautiful gold box.", "Select your favorite piece.", "Enjoy the rich, smooth, luxurious taste."] } },
+            { id: 2, name: "Fudgy Chocolate Brownie", desc: "A rich, gooey dark chocolate brownie baked to perfection.", img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=500&q=80", 
+              recipe: { ingredients: ["Dark Chocolate", "Butter", "Sugar", "Eggs", "Cocoa Powder"], steps: ["Melt chocolate and butter.", "Whisk eggs and sugar until fluffy.", "Fold in dry ingredients and bake at 350°F."] } },
+            { id: 3, name: "Choco-Dipped Strawberries", desc: "Fresh sweet strawberries coated in rich dark and milk chocolate.", img: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?auto=format&fit=crop&w=500&q=80", 
+              recipe: { ingredients: ["Fresh Large Strawberries", "Dark Chocolate", "White Chocolate Drizzle"], steps: ["Melt the chocolate gently.", "Dip the fresh strawberries.", "Let cool and drizzle with white chocolate."] } },
+            { id: 4, name: "Nutella Cheesecake", desc: "A decadent dessert combining cream cheese and rich hazelnut chocolate.", img: "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?auto=format&fit=crop&w=500&q=80", 
+              recipe: { ingredients: ["Cream Cheese", "Nutella", "Graham Crackers", "Butter"], steps: ["Prepare a buttery graham crust.", "Blend Nutella and cream cheese.", "Chill overnight for a perfect set."] } },
+            { id: 5, name: "Galaxy Chocolate Dessert", desc: "Silky smooth Galaxy chocolate layers melting flawlessly.", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80", 
+              recipe: { ingredients: ["Galaxy Chocolate Bars", "Heavy Whipping Cream"], steps: ["Melt the smooth Galaxy chocolate.", "Fold gently into whipped cream.", "Serve chilled in a glass."] } },
+            { id: 6, name: "Godiva Dark Assortment", desc: "A refined selection of dark chocolate artistry and elegance.", img: "https://images.unsplash.com/photo-1614088685112-0a760b71a3c8?auto=format&fit=crop&w=500&q=80", 
+              recipe: { ingredients: ["Premium Godiva Cocoa", "Cacao Nibs", "Ganache"], steps: ["Admire the beautiful chocolate art.", "Indulge in the finest dark chocolate."] } },
+            { id: 7, name: "Chocolate Lava Cake", desc: "Rich dark chocolate cake with a warm, flowing molten center.", img: "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&w=500&q=80", 
+              recipe: { ingredients: ["Dark Chocolate", "Butter", "Powdered Sugar", "Eggs", "Flour"], steps: ["Melt chocolate and butter.", "Whisk in eggs and sugar.", "Bake for 12 mins at 400°F until center is flowing."] } }
+        ];
+
+        // --- MUSIC PLAYER DATA ---
+        const musicTracks = [
+            {
+                title: "Janamdin Mubarak",
+                subtitle: "Hindi Original",
+                src: "Janamdin Mubarak Ho Chachi.mp3",
+                lyrics: `<span class="verse-title">[Verse]</span>
+                         Door ho kar bhi paas ho,<br>
+                         Dil ke har ehsaas ho,<br>
+                         Har dua mein naam aapka,<br>
+                         Har khushi ki aas ho.<br><br>
+                         <span class="verse-title">[Chorus]</span>
+                         Janamdin mubarak ho Chachi,<br>
+                         Aap ho sabse khaas,<br>
+                         Door hoke bhi lagte ho,<br>
+                         Dil ke bilkul paas.<br><br>
+                         <span class="verse-title">[Outro]</span>
+                         Yeh pyar jo hum bhejte hain,<br>
+                         Kabhi kam na hoga,<br>
+                         Har dua mein aapka naam,<br>
+                         Hamesha rahega.`
+            },
+            {
+                title: "Across The Miles",
+                subtitle: "Acoustic Pop (English)",
+                src: "Across The Miles.mp3",
+                lyrics: `<span class="verse-title">[Verse 1]</span>
+                         Across the miles, across the sea,<br>
+                         You’re still so close to me,<br>
+                         In every smile, in every way,<br>
+                         You light up every day.<br><br>
+                         <span class="verse-title">[Verse 2]</span>
+                         Through every year, through every phase,<br>
+                         You’ve filled our lives with grace,<br>
+                         Your love is warm, your heart is true,<br>
+                         There’s no one else like you.<br><br>
+                         <span class="verse-title">[Final Chorus]</span>
+                         Happy birthday, shining light,<br>
+                         May your world be warm and bright,<br>
+                         From far away, this song we send,<br>
+                         With love that will never end.`
+            },
+            {
+                title: "Shining Light",
+                subtitle: "Cinematic Edition",
+                src: "Shining Light.mp3",
+                lyrics: `<span class="verse-title">[Verse 1]</span>
+                         Across the miles, across the sea,<br>
+                         You’re still so close to me,<br>
+                         In every smile, in every way,<br>
+                         You light up every day.<br><br>
+                         <span class="verse-title">[Verse 2]</span>
+                         Through every year, through every phase,<br>
+                         You’ve filled our lives with grace,<br>
+                         Your love is warm, your heart is true,<br>
+                         There’s no one else like you.<br><br>
+                         <span class="verse-title">[Final Chorus]</span>
+                         Happy birthday, shining light,<br>
+                         May your world be warm and bright,<br>
+                         From far away, this song we send,<br>
+                         With love that will never end.`
+            },
+            {
+                title: "Beautiful Moments",
+                subtitle: "Special Track 1",
+                src: "1.mp3",
+                lyrics: `<span class="verse-title">[Instrumental Melody]</span><br>
+                         A beautiful melody created just for you.<br><br>
+                         Enjoy the music! 🎵`
+            },
+            {
+                title: "Forever Grace",
+                subtitle: "Special Track 2",
+                src: "2.mp3",
+                lyrics: `<span class="verse-title">[Instrumental Melody]</span><br>
+                         Another special piece to celebrate your grace.<br><br>
+                         Enjoy the music! ✨`
+            }
+        ];
+
+        let cart = [];
+        let storeUnlocked = false;
+        let currentTrackIndex = 0;
+        let pendingDownloadIndex = -1;
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. SETUP CANVAS & PARTICLES ---
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particlesArray = [];
+            let w, h;
+
+            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
+
+            class Particle {
+                constructor(x, y, type = 'ambient') {
+                    this.x = x || Math.random() * w; this.y = y || Math.random() * h;
+                    this.type = type; this.life = 1;
+                    if (type === 'heart') {
+                        this.size = Math.random() * 8 + 4; this.speedY = Math.random() * -1 - 0.5; this.speedX = Math.random() * 0.5 - 0.25; this.color = `rgba(244, 220, 214, ${Math.random() * 0.4 + 0.1})`;
+                    } else if (type === 'confetti') {
+                        this.size = Math.random() * 3 + 1; this.speedY = Math.random() * 3 + 1; this.speedX = Math.random() * 4 - 2; this.color = ['rgba(232, 178, 135, 0.8)', 'rgba(255, 255, 255, 0.6)'][Math.floor(Math.random()*2)]; this.decay = Math.random() * 0.005 + 0.002;
+                    } else {
+                        this.size = Math.random() * 2 + 0.5; this.speedY = Math.random() * -0.5 - 0.1; this.speedX = Math.random() * 0.4 - 0.2; this.color = ['rgba(232, 178, 135, 0.5)', 'rgba(244, 220, 214, 0.3)'][Math.floor(Math.random()*2)];
+                    }
+                }
+                update() {
+                    this.y += this.speedY; this.x += this.speedX + Math.sin(this.y * 0.01);
+                    if (this.type === 'confetti') this.life -= this.decay;
+                    else if (this.y < -50) { this.y = h + 50; this.x = Math.random() * w; }
+                }
+                drawHeart(ctx, x, y, w) {
+                    ctx.save(); ctx.translate(x, y); ctx.fillStyle = this.color; ctx.beginPath(); const d = w; ctx.moveTo(0, d/4); ctx.bezierCurveTo(0, 0, -d/2, 0, -d/2, d/4); ctx.bezierCurveTo(-d/2, d/2, 0, d*0.75, 0, d); ctx.bezierCurveTo(0, d*0.75, d/2, d/2, d/2, d/4); ctx.bezierCurveTo(d/2, 0, 0, 0, 0, d/4); ctx.fill(); ctx.restore();
+                }
+                draw() {
+                    if (this.type === 'heart') { this.drawHeart(ctx, this.x, this.y, this.size); } 
+                    else { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.type === 'confetti' ? this.color.replace(/[\d\.]+\)$/g, `${this.life})`) : this.color; ctx.fill(); }
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, w, h);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update(); particlesArray[i].draw();
+                    if (particlesArray[i].type === 'confetti' && particlesArray[i].life <= 0) { particlesArray.splice(i, 1); i--; }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+
+            function startAmbientParticles(withHearts = false) {
+                particlesArray = [];
+                for (let i = 0; i < 40; i++) particlesArray.push(new Particle(null, null, 'ambient'));
+                if (withHearts) { for (let i = 0; i < 15; i++) particlesArray.push(new Particle(null, null, 'heart')); }
+                if (!window.particlesRunning) { window.particlesRunning = true; animateParticles(); }
+            }
+
+            window.triggerConfetti = function() {
+                const cakeContainer = document.getElementById('cake-container');
+                const rect = cakeContainer ? cakeContainer.getBoundingClientRect() : { width: 0 };
+                let burstX = rect.width > 0 ? rect.left + rect.width / 2 : window.innerWidth / 2;
+                let burstY = rect.width > 0 ? rect.top : window.innerHeight / 3;
+
+                for (let i = 0; i < 100; i++) {
+                    const p = new Particle(burstX + (Math.random()*100-50), burstY + (Math.random()*50), 'confetti');
+                    p.speedY = Math.random() * -4 - 2; setTimeout(() => p.speedY = Math.random() * 2 + 1, 300); particlesArray.push(p);
+                }
+            }
+            window.enableHearts = function() { startAmbientParticles(true); }
+            startAmbientParticles(true);
+
+            // --- 2. CINEMATIC INTRO SEQUENCE ---
+            const introScreen = document.getElementById('cinematic-intro');
+            const quote1 = document.getElementById('cine-quote-1');
+            const quote2 = document.getElementById('cine-quote-2');
+            const eclipse = document.getElementById('cine-eclipse');
+            const heroTitle = document.getElementById('cine-title');
+            const enterBtn = document.getElementById('enter-magic-btn');
+            const flash = document.getElementById('epic-flash');
+            const mainContent = document.getElementById('main-content');
+
+            setTimeout(() => {
+                if(quote1) quote1.classList.add('active');
+                setTimeout(() => {
+                    if(quote1) { quote1.classList.remove('active'); quote1.classList.add('exit'); }
+                    setTimeout(() => {
+                        if(quote2) quote2.classList.add('active');
+                        setTimeout(() => {
+                            if(quote2) { quote2.classList.remove('active'); quote2.classList.add('exit'); }
+                            setTimeout(() => {
+                                if(eclipse) eclipse.classList.add('active');
+                                if(heroTitle) heroTitle.classList.add('active');
+                                setTimeout(() => { if(enterBtn) enterBtn.classList.add('active'); }, 1500);
+                            }, 1000);
+                        }, 2500);
+                    }, 1000);
+                }, 2500);
+            }, 500);
+
+            if(enterBtn) {
+                enterBtn.addEventListener('click', () => {
+                    if(flash) flash.style.opacity = '1';
+                    setTimeout(() => {
+                        if(introScreen) introScreen.style.display = 'none';
+                        if(mainContent) mainContent.style.display = 'block';
+                        window.scrollTo(0, 0);
+                        setTimeout(() => { if(flash) flash.style.opacity = '0'; }, 100);
+                        observeElements();
+                    }, 1500);
+                });
+            }
+
+            function observeElements() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
+                }, { threshold: 0.15 });
+                document.querySelectorAll('.scroll-reveal').forEach(section => observer.observe(section));
+            }
+
+            // --- 3. MUSIC PLAYER INIT & LOGIC ---
+            const audioEl = document.getElementById('birthday-audio');
+            const playlistContainer = document.getElementById('playlist-container');
+            const lyricsText = document.getElementById('lyrics-text');
+            const npTitle = document.getElementById('np-title');
+            const npSub = document.getElementById('np-sub');
+            const audioEq = document.getElementById('audio-eq');
+            
+            window.switchMusicTab = function(tab) {
+                const slider = document.getElementById('music-tab-slider');
+                const btnSongs = document.getElementById('btn-tab-songs');
+                const btnLyrics = document.getElementById('btn-tab-lyrics');
+                const contentSongs = document.getElementById('tab-songs');
+                const contentLyrics = document.getElementById('tab-lyrics');
+
+                if(tab === 'songs') {
+                    slider.style.transform = 'translateX(0)';
+                    btnSongs.classList.add('active'); btnLyrics.classList.remove('active'); contentLyrics.classList.remove('active');
+                    setTimeout(() => {
+                        if(!contentLyrics.classList.contains('active')) contentLyrics.style.display = 'none';
+                        contentSongs.style.display = 'block'; setTimeout(() => contentSongs.classList.add('active'), 10);
+                    }, 300);
+                } else {
+                    slider.style.transform = 'translateX(100%)';
+                    btnLyrics.classList.add('active'); btnSongs.classList.remove('active'); contentSongs.classList.remove('active');
+                    setTimeout(() => {
+                        if(!contentSongs.classList.contains('active')) contentSongs.style.display = 'none';
+                        contentLyrics.style.display = 'block'; setTimeout(() => contentLyrics.classList.add('active'), 10);
+                    }, 300);
+                }
+            };
+
+            function renderPlaylist() {
+                playlistContainer.innerHTML = '';
+                musicTracks.forEach((track, index) => {
+                    playlistContainer.innerHTML += `
+                        <div class="track-item ${index === currentTrackIndex ? 'active' : ''}" id="track-${index}">
+                            <div class="track-details" onclick="playTrack(${index})">
+                                <span class="track-name">${track.title}</span>
+                                <span class="track-sub">${track.subtitle}</span>
+                            </div>
+                            <div class="track-actions">
+                                <button class="icon-btn play-btn" id="play-btn-${index}" onclick="playTrack(${index})" title="Play/Pause">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                </button>
+                                <button class="icon-btn" onclick="requestDownload(${index})" title="Secure Download">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            function loadTrack(index) {
+                currentTrackIndex = index;
+                const track = musicTracks[index];
+                audioEl.src = track.src;
+                lyricsText.innerHTML = track.lyrics;
+                npTitle.innerText = track.title;
+                npSub.innerText = "Ready to play";
+                renderPlaylist();
+            }
+            loadTrack(0);
+
+            audioEl.addEventListener('play', () => {
+                if(npSub) npSub.innerText = "Now Playing";
+                if(audioEq) audioEq.classList.add('playing');
+                const activeBtn = document.getElementById(`play-btn-${currentTrackIndex}`);
+                if(activeBtn) {
+                    activeBtn.classList.add('playing');
+                    activeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+                }
+            });
+
+            audioEl.addEventListener('pause', () => {
+                if(npSub) npSub.innerText = "Paused";
+                if(audioEq) audioEq.classList.remove('playing');
+                const activeBtn = document.getElementById(`play-btn-${currentTrackIndex}`);
+                if(activeBtn) {
+                    activeBtn.classList.remove('playing');
+                    activeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+                }
+            });
+            
+            // NO AUTOPLAY NEXT: Just stop when ended
+            audioEl.addEventListener('ended', () => {
+                if(npSub) npSub.innerText = "Finished";
+                if(audioEq) audioEq.classList.remove('playing');
+                const activeBtn = document.getElementById(`play-btn-${currentTrackIndex}`);
+                if(activeBtn) {
+                    activeBtn.classList.remove('playing');
+                    activeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+                }
+            });
+
+            window.playTrack = function(index) {
+                // Reset all play buttons visually first
+                document.querySelectorAll('.play-btn').forEach(btn => {
+                    btn.classList.remove('playing');
+                    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+                });
+
+                if (index === currentTrackIndex) {
+                    if (audioEl.paused) { audioEl.play(); } else { audioEl.pause(); }
+                } else {
+                    document.querySelectorAll('.track-item').forEach(el => el.classList.remove('active'));
+                    const newTrackEl = document.getElementById(`track-${index}`);
+                    if(newTrackEl) newTrackEl.classList.add('active');
+                    loadTrack(index);
+                    audioEl.play();
+                }
+            };
+
+            window.requestDownload = function(index) {
+                pendingDownloadIndex = index;
+                document.getElementById('download-password').value = '';
+                document.getElementById('download-password-error').style.display = 'none';
+                openModal('download-password-modal');
+            };
+
+            window.verifyDownloadPassword = function() {
+                const input = document.getElementById('download-password').value.toLowerCase().trim();
+                const err = document.getElementById('download-password-error');
+                
+                if (input === 'rose') {
+                    err.style.display = 'none';
+                    closeModal('download-password-modal');
+                    const track = musicTracks[pendingDownloadIndex];
+                    const link = document.createElement('a');
+                    link.href = track.src;
+                    link.download = `${track.title} - Chachi's Birthday.mp3`;
+                    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+                } else {
+                    err.style.display = 'block';
+                    err.classList.remove('error-shake'); void err.offsetWidth; err.classList.add('error-shake');
+                    setTimeout(() => err.classList.remove('error-shake'), 300);
+                }
+            };
+
+            window.openMusicPlayer = function() { openModal('music-modal'); };
+
+            // --- 4. CAKE INTERACTION ---
+            const cakeContainer = document.getElementById('cake-container');
+            const cakeHint = document.getElementById('cake-hint');
+            const unlockBtn = document.getElementById('unlock-store-btn');
+            let isLit = false;
+
+            if(cakeContainer) {
+                cakeContainer.addEventListener('click', () => {
+                    if (!isLit) {
+                        cakeContainer.classList.add('lit');
+                        if(cakeHint) cakeHint.style.opacity = '0';
+                        isLit = true;
+                        if(audioEl) audioEl.play().catch(e => console.log("Audio play blocked by browser."));
+                        window.triggerConfetti();
+                        setTimeout(() => { if(unlockBtn) unlockBtn.classList.add('visible'); }, 2000);
+                    }
+                });
+            }
+
+            // --- 5. FLIGHT BOOKING INIT ---
+            const flightBtn = document.getElementById('one-more-surprise-btn');
+            if(flightBtn) {
+                flightBtn.addEventListener('click', () => {
+                    openModal('flight-modal');
+                    const dateInput = document.getElementById('flight-date');
+                    if(dateInput) { const today = new Date().toISOString().split('T')[0]; dateInput.setAttribute('min', today); }
+                });
+            }
+
+            // --- 6. STORE INIT ---
+            if(unlockBtn) unlockBtn.addEventListener('click', () => openModal('password-modal'));
+
+            const storeContainer = document.getElementById('store-items-container');
+            if(storeContainer) {
+                products.forEach((p, index) => {
+                    const delay = index * 0.15;
+                    const card = document.createElement('div');
+                    card.className = 'store-card';
+                    card.style.animationDelay = `${delay}s`;
+                    card.innerHTML = `
+                        <img src="${p.img}" alt="${p.name}" class="store-card-img">
+                        <h3>${p.name}</h3>
+                        <p>${p.desc}</p>
+                        <div class="store-card-actions">
+                            <button class="btn-circular btn-outline" onclick="animateRecipeClick(this, ${p.id})" title="View Recipe">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path><path d="M7 2v20"></path><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path></svg>
+                            </button>
+                            <button class="btn-circular btn-filled" onclick="animateCartClick(this, ${p.id})" title="Add to Cart">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                            </button>
+                        </div>
+                    `;
+                    storeContainer.appendChild(card);
+                });
+            }
+        }); // END OF DOM CONTENT LOADED
+
+        // --- GLOBAL UI & STORE FUNCTIONS ---
+        
+        window.animateCartClick = function(btn, id) { btn.classList.add('click-ripple'); setTimeout(() => { btn.classList.remove('click-ripple'); addToCart(id); }, 300); }
+        window.animateRecipeClick = function(btn, id) { btn.classList.add('click-ripple'); setTimeout(() => { btn.classList.remove('click-ripple'); viewRecipe(id); }, 300); }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function checkPassword() {
+            const input = document.getElementById('store-password').value.toLowerCase().trim();
+            const err = document.getElementById('password-error');
+            if (input === 'dearest chachi') {
+                err.style.display = 'none'; closeModal('password-modal'); revealStore();
+            } else {
+                err.style.display = 'block'; err.classList.remove('error-shake'); void err.offsetWidth; err.classList.add('error-shake'); setTimeout(() => err.classList.remove('error-shake'), 300);
+            }
+        }
+
+        function revealStore() {
+            if (storeUnlocked) return;
+            storeUnlocked = true;
+            document.body.classList.add('store-open'); 
+            const section = document.getElementById('hidden-store-section');
+            section.style.display = 'flex';
+            setTimeout(() => {
+                section.classList.add('visible');
+                section.scrollIntoView({ behavior: 'smooth' });
+                if(window.enableHearts) window.enableHearts(); 
+                document.getElementById('cart-icon').style.display = 'flex';
+                document.getElementById('music-icon').style.display = 'flex';
+            }, 100);
+        }
+
+        function viewRecipe(id) {
+            const product = products.find(p => p.id === id);
+            document.getElementById('recipe-title').innerText = product.name;
+            let html = '<h4>Ingredients</h4><ul>';
+            product.recipe.ingredients.forEach(i => html += `<li>${i}</li>`);
+            html += '</ul><h4>Steps</h4><ol>';
+            product.recipe.steps.forEach(s => html += `<li>${s}</li>`);
+            html += '</ol>';
+            document.getElementById('recipe-details').innerHTML = html;
+            openModal('recipe-modal');
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product); updateCartUI();
+            const icon = document.getElementById('cart-icon');
+            icon.style.transform = 'scale(1.3)'; setTimeout(() => icon.style.transform = 'scale(1)', 300);
+        }
+
+        function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const list = document.getElementById('cart-items-list');
+            const btn = document.getElementById('checkout-btn');
+            
+            if (cart.length === 0) { list.innerHTML = '<p class="empty-cart-msg">Your cart is empty.</p>'; btn.style.display = 'none'; return; }
+
+            list.innerHTML = '';
+            cart.forEach((item, index) => {
+                const div = document.createElement('div'); div.className = 'cart-item';
+                div.innerHTML = `<span>${item.name}</span> <button class="cart-item-remove" onclick="removeFromCart(${index})">Remove</button>`;
+                list.appendChild(div);
+            });
+            btn.style.display = 'block';
+        }
+
+        function processCheckout() {
+            closeModal('cart-modal');
+            setTimeout(() => {
+                openModal('fake-error-modal');
+                setTimeout(() => {
+                    closeModal('fake-error-modal');
+                    setTimeout(() => {
+                        openModal('success-modal');
+                        cart = []; updateCartUI();
+                        if(window.triggerConfetti) window.triggerConfetti(); 
+                    }, 400); 
+                }, 3000);
+            }, 400);
+        }
+
+        // --- FLIGHT BOOKING & PDF LOGIC ---
+        function confirmFlight() {
+            const dateVal = document.getElementById('flight-date').value;
+            const termsChecked = document.getElementById('flight-terms').checked;
+            const errorMsg = document.getElementById('flight-terms-error');
+            const bookBtn = document.getElementById('book-flight-btn');
+
+            if(!termsChecked) {
+                errorMsg.style.display = 'block'; bookBtn.classList.remove('error-shake'); void bookBtn.offsetWidth; bookBtn.classList.add('error-shake'); setTimeout(() => bookBtn.classList.remove('error-shake'), 300); return;
+            } else { errorMsg.style.display = 'none'; }
+
+            if(!dateVal) { alert("Please select a travel date."); return; }
+
+            closeModal('flight-modal');
+            setTimeout(() => { openModal('flight-success-modal'); if(window.triggerConfetti) window.triggerConfetti(); }, 500);
+        }
+
+        function downloadTicket() {
+            if (!window.jspdf || !window.jspdf.jsPDF) { alert("PDF Generator is still loading. Please try again in a moment."); return; }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: [210, 100] });
+
+            const date = document.getElementById('flight-date').value || 'Open Date';
+            const seatElem = document.querySelector('input[name="seat-type"]:checked');
+            const seat = seatElem ? seatElem.value : 'Window';
+            const bookingId = 'BHT' + Math.floor(Math.random() * 9000 + 1000) + 'JA';
+
+            doc.setFillColor(43, 20, 36); doc.rect(0, 0, 210, 100, 'F');
+            doc.setDrawColor(232, 178, 135); doc.setLineWidth(1); doc.rect(5, 5, 200, 90);
+            doc.setDrawColor(232, 178, 135); doc.setLineDashPattern([2, 2], 0); doc.line(155, 5, 155, 95); doc.setLineDashPattern([], 0); 
+
+            doc.setTextColor(232, 178, 135); doc.setFont('times', 'bold'); doc.setFontSize(22); doc.text("BHATIJA AIRWAYS", 15, 20);
+            doc.setFontSize(10); doc.setTextColor(244, 220, 214); doc.text("VIP CLASS TICKET", 16, 26);
+            doc.setDrawColor(232, 178, 135); doc.setLineWidth(0.5); doc.line(15, 32, 145, 32);
+
+            doc.setTextColor(200, 200, 200); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.text("PASSENGER NAME", 15, 45);
+            doc.setFontSize(11); doc.setTextColor(232, 178, 135); doc.text("ANUSHA HABIBURREHMAN SHAIKH (ROSE)", 15, 52);
+
+            doc.setFontSize(8); doc.setTextColor(200, 200, 200); doc.text("FROM", 15, 65);
+            doc.setFontSize(14); doc.setTextColor(255, 255, 255); doc.text("SAUDI ARABIA (RUH)", 15, 72);
+
+            doc.setFontSize(8); doc.setTextColor(200, 200, 200); doc.text("TO", 80, 65);
+            doc.setFontSize(14); doc.setTextColor(255, 255, 255); doc.text("INDIA (IND)", 80, 72);
+
+            doc.setFontSize(8); doc.setTextColor(200, 200, 200); doc.text("DATE", 15, 85); doc.text(date, 15, 90);
+            doc.text("SEAT", 50, 85); doc.text(seat, 50, 90);
+            doc.text("CLASS", 80, 85); doc.text("VIP CHACHI", 80, 90); 
+            doc.text("PNR", 125, 85); doc.text(bookingId, 125, 90);
+
+            doc.setFontSize(7); doc.setTextColor(244, 220, 214); doc.text("ALLOWANCE: 2 Bags of Infinite Love + 70kg of your weight 😁", 15, 94);
+
+            doc.setFont('times', 'bold'); doc.setFontSize(14); doc.setTextColor(232, 178, 135); doc.text("BOARDING PASS", 160, 20);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(200, 200, 200); doc.text("NAME:", 160, 35);
+            doc.setTextColor(255, 255, 255); doc.text("ROSE", 160, 40); 
+            doc.setTextColor(200, 200, 200); doc.text("FROM: RUH", 160, 50); doc.text("TO: IND", 160, 55);
+            doc.text("SEAT: " + seat, 160, 65); doc.text("DATE: " + date, 160, 70);
+
+            doc.setDrawColor(255, 255, 255);
+            for(let i=0; i<15; i++) { let w = Math.random() * 1.5 + 0.2; doc.setLineWidth(w); doc.line(160 + (i*2), 78, 160 + (i*2), 92); }
+
+            doc.setFont('times', 'italic'); doc.setFontSize(9); doc.setTextColor(244, 220, 214); doc.text("", 160, 90);
+            doc.save('Chachi_Special_Ticket.pdf');
+        }
+    </script>
+</body>
+</html> 
